@@ -1,0 +1,115 @@
+lbrary management system in c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_BOOKS 100
+
+// Structure to hold book details
+typedef struct {
+    int id;
+    char title[100];
+    char author[100];
+    int available;
+} Book;
+
+Book library[MAX_BOOKS];
+int book_count = 0;
+
+// Function to add a book
+void addBook() {
+    if (book_count >= MAX_BOOKS) {
+        printf("Library is full! Cannot add more books.\n");
+        return;
+    }
+    printf("Enter book ID: ");
+    scanf("%d", &library[book_count].id);
+    getchar(); // Clear input buffer
+    printf("Enter book title: ");
+    fgets(library[book_count].title, 100, stdin);
+    library[book_count].title[strcspn(library[book_count].title, "\n")] = 0; // Remove newline
+    printf("Enter author name: ");
+    fgets(library[book_count].author, 100, stdin);
+    library[book_count].author[strcspn(library[book_count].author, "\n")] = 0;
+    library[book_count].available = 1;
+    book_count++;
+    printf("Book added successfully!\n");
+}
+
+// Function to display all books
+void displayBooks() {
+    if (book_count == 0) {
+        printf("No books in the library.\n");
+        return;
+    }
+    printf("\nLibrary Books:\n");
+    for (int i = 0; i < book_count; i++) {
+        printf("ID: %d, Title: %s, Author: %s, Available: %s\n", library[i].id, library[i].title, library[i].author, 
+               library[i].available ? "Yes" : "No");
+    }
+}
+
+// Function to search for a book by ID
+void searchBook() {
+    int id;
+    printf("Enter book ID to search: ");
+    scanf("%d", &id);
+    for (int i = 0; i < book_count; i++) {
+        if (library[i].id == id) {
+            printf("Book found!\nID: %d, Title: %s, Author: %s, Available: %s\n", 
+                   library[i].id, library[i].title, library[i].author, library[i].available ? "Yes" : "No");
+            return;
+        }
+    }
+    printf("Book not found.\n");
+}
+
+// Function to delete a book by ID
+void deleteBook() {
+    int id;
+    printf("Enter book ID to delete: ");
+    scanf("%d", &id);
+    for (int i = 0; i < book_count; i++) {
+        if (library[i].id == id) {
+            for (int j = i; j < book_count - 1; j++) {
+                library[j] = library[j + 1];
+            }
+            book_count--;
+            printf("Book deleted successfully!\n");
+            return;
+        }
+    }
+    printf("Book not found.\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\nLibrary Management System\n");
+        printf("1. Add Book\n2. Display Books\n3. Search Book\n4. Delete Book\n5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar(); // Clear input buffer
+        switch (choice) {
+            case 1:
+                addBook();
+                break;
+            case 2:
+                displayBooks();
+                break;
+            case 3:
+                searchBook();
+                break;
+            case 4:
+                deleteBook();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
